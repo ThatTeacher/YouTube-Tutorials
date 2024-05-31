@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Filter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 300px;
+            margin: 4em auto;
+            overflow: hidden;
+        }
+
+        .filters {
+            display: flex;
+            width: 100%;
+            font-size: 0.9em;
+            overflow-x: scroll;
+            flex-wrap: nowrap;
+            color: #fff;
+        }
+
+        .filters::-webkit-scrollbar {
+            opacity: 0;
+            height: 0;
+            width: 0;
+        }
+
+        .filters div {
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: pointer;
+            background: #222;
+            font-weight: 450;
+            margin: 0 0.25em;
+            padding: 0.5em 1.1em;
+            border-radius: 0.4em;
+        }
+
+        .filters div:hover {
+            filter: brightness(125%);
+        }
+
+        .filter-selected {
+            background: #f0f0f0 !important;
+            color: #000 !important;
+        }
+
+        .filter-nav {
+            position: absolute;
+            top: 0;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            background: linear-gradient(-90deg, transparent, rgb(0, 0, 0), #000000);
+            padding: 0 1em 0 0;
+            cursor: pointer;
+        }
+
+        #right {
+            background: linear-gradient(90deg, transparent, rgb(0, 0, 0), #000000);
+            right: 0;
+            padding: 0 0 0 1em;
+        }
+
+        .filter-nav:hover svg {
+            background: rgb(60, 60, 60);
+        }
+
+        div#right.hidden,
+        div#left.hidden {
+            display: none !important;
+        }
+
+        .filter-nav svg {
+            height: 1.5em;
+            border-radius: 1em;
+            background: #000;
+        }
+    </style>
+    <script>
+        window.onload = () => {
+            let rightSkip = document.querySelector("#right")
+            let leftSkip = document.querySelector("#left")
+            let filters = document.querySelector(".filters")
+
+            rightSkip.classList.toggle("hidden", filters.scrollWidth == filters.clientWidth)
+
+            rightSkip.onclick = () => {
+                filters.scrollBy({
+                    left: filters.clientWidth / 2,
+                    behavior: "smooth"
+                })
+            }
+
+            leftSkip.onclick = () => {
+                filters.scrollBy({
+                    left: filters.clientWidth * -1 / 2,
+                    behavior: "smooth"
+                })
+            }
+
+            filters.querySelectorAll("div").forEach((item) => {
+                item.onclick = () => {
+                    document.querySelector(".filter-selected").classList.toggle("filter-selected")
+                    item.classList.toggle("filter-selected")
+                }
+            })
+
+            filters.onscroll = (e) => {
+                let filters = e.currentTarget
+                leftSkip.classList.toggle("hidden", filters.scrollLeft <= 0)
+                rightSkip.classList.toggle("hidden",
+                    filters.scrollLeft >= filters.scrollWidth - filters.clientWidth)
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="filters">
+            <div class="filter-selected">Music</div>
+            <div>Art</div>
+            <div>Science</div>
+            <div>Movies</div>
+            <div>News</div>
+            <div>Programming</div>
+        </div>
+        <div id="left" class="filter-nav hidden">
+            <svg viewBox="0 0 100 100">
+                <path d="M57.5,30 L32.5,50 57.5,70" stroke="#fff" stroke-width="8" fill="none"></path>
+            </svg>
+        </div>
+        <div id="right" class="filter-nav">
+            <svg viewBox="0 0 100 100">
+                <path d="M37.5,30 L62.5,50 37.5,70" stroke="#fff" stroke-width="8" fill="none"></path>
+            </svg>
+        </div>
+
+    </div>
+</body>
+
+</html>
