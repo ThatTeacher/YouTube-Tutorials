@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Input Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Open Sans", sans-serif;
+            font-optical-sizing: auto;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: #111;
+        }
+
+        .search-input {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 25rem;
+            margin: 2em auto;
+            background: #111;
+            outline: 1pt solid #999;
+            border-radius: 2em;
+            padding: 0 0.2em;
+            z-index: 2;
+            overflow: visible;
+        }
+
+        .search-input img {
+            width: 1.25em;
+            height: 1.25em;
+            margin-left: 0.5em;
+        }
+
+        .search-input input {
+            color: #f0f0f0;
+            flex: 1;
+            padding: 0.5em;
+            width: 20rem;
+            font-size: 1rem;
+            background: none;
+            outline: none;
+        }
+
+        .search-input:focus-within {
+            outline: 1.5pt solid rgb(52, 52, 201);
+        }
+
+        .search-options {
+            position: absolute;
+            top: calc(100% + 1em);
+            border-radius: 1em;
+            overflow: hidden;
+            width: 100%;
+            padding: 0.2em 0;
+            background: #444;
+            display: none;
+            font-size: 1rem;
+        }
+
+        .focused.search-options {
+            display: block;
+        }
+
+        .search-options>a {
+            cursor: pointer;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+            /* background: #f00; */
+            padding: 0.5em 1em;
+            margin: 0.1em 0;
+        }
+
+        .search-options>a:hover {
+            background: #555;
+        }
+
+        .search-options>div {
+            opacity: 0.5;
+            color: #f0f0f0;
+            font-weight: 600;
+            padding: 0.5em 1em;
+        }
+    </style>
+    <script>
+        let TEST_VALUES = ["wow", "damm", "dang it", "skibidi", "toilet"]
+
+        window.onload = () => {
+            let searchInput = document.querySelector("#search-input")
+            let searchOptions = document.querySelector(".search-options")
+
+            let onInput = (e) => {
+                if (searchOptions) {
+                    //Could fetch instead..
+                    let str = ""
+                    let filtered =
+                        TEST_VALUES
+                            .filter((value) => 
+                            value.includes(e ? e.currentTarget.value : ""))
+                    if (filtered.length === 0) {
+                        str = '<div>no results</div>'
+                    } else {
+                        filtered.forEach((value) => {
+                            //Make sure values are safe (To prevent XSS), if you append that way
+                            str += `<a>${value}</a>`
+                        })
+                    }
+
+                    searchOptions.innerHTML = str
+                }
+            }
+
+            onInput()
+            searchInput.onfocus = () => {
+                searchOptions.classList.toggle("focused", true)
+            }
+            searchInput.oninput = onInput
+
+            window.addEventListener("click", (e) => {
+                if (searchInput.contains(e.target) 
+                || searchOptions.contains(e.target)) {
+                    return;
+                }
+                searchOptions.classList.toggle("focused", false)
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div class="search-input">
+        <img src="./search.svg" />
+        <input id="search-input" placeholder="Search">
+        <div class="search-options">
+        </div>
+    </div>
+    <div style="color: white; text-align: center; padding: 1em 0; margin: 1em auto; background: #222; color: #999; font-weight: 550;">What the sigma are you searching?</div>
+</body>
+
+</html>
